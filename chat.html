@@ -22,6 +22,7 @@
             </div>
         </div>
     </div>
+    <div id="chat-content"></div>
     <div v-if="joined">
         <div>
             <input type="text" v-model="newMsg" @keyup.enter="send" id="message-content">
@@ -32,7 +33,6 @@
             </button>
         </div>
     </div>
-    <div id="chat-content"></div>
     <footer class="page-footer">
     </footer>
     <script>
@@ -41,11 +41,48 @@
         username = null; // Our username
         joined = false; // True if email and username have been filled in
         ws = new WebSocket("ws://192.168.43.199:8080/api/ws") // Our websocket
-        ws.addEventListener('message', function(e) {
+        ws.addEventListener('message', function (e) {
             msg = JSON.parse(e.data);
             console.log(msg)
-            $("#chat-content").append("<h4>" + msg.Message + "</h4>");
+            console.log(msg.SenderPk);
+            if (localStorage.getItem("userId") == msg.SenderPk) {
+                finalMessage = "<p style=\"padding: 3px; width: 30%; border: 1px solid green; border-radius: 10px; margin-left: 50%; overflow: scroll;\">" + msg.Message + "</p>";
+            } else {
+                finalMessage = "<p style=\"padding: 3px; width: 30%; border: 1px solid blue; border-radius: 10px; margin-left: 10%; overflow: scroll;\">" + msg.Message + "</p>";
+            }
+            $("#chat-content").append(finalMessage);
         });
+
+        // this will  be  called  when the page loads
+        $.ajax({
+            type: 'GET',
+            url: 'http://192.168.43.199:8080/api/old-messages',
+            data: localStorage.getItem("receiverId") + ":" + localStorage.getItem("userId"),
+            xhrFields: { withCredentials: true },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                oldMessages = data.messages;
+                oldMessages.forEach(function (element) {
+                    messageData = element.split(" ::: ");
+                    messageToShow = messageData[0];
+                    isSender = messageData[1] == "true" ? true : false;
+                    if (isSender) {
+                        finalMessage = "<p style=\"padding: 3px; width: 30%; border: 1px solid green; border-radius: 10px; margin-left: 50%; overflow: scroll;\">" + messageToShow + "</p>";
+                    } else {
+                        finalMessage = "<p style=\"padding: 3px; width: 30%; border: 1px solid blue; border-radius: 10px; margin-left: 10%; overflow: scroll;\">" + messageToShow + "</p>";
+                    }
+                    $("#chat-content").append(finalMessage);
+                    console.log(messageToShow);
+                    console.log(isSender);
+                });
+                // console.log(data.messages);
+
+            },
+            error: function (message) {
+                console.log(message.responseJSON);
+            }
+        })
 
         function send(messageContent) {
             if (messageContent != '') {
@@ -63,4 +100,5 @@
             send($("#message-content").val());
         });
     </script>
+
 </html>
