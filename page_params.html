@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ShareTech</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div>
+                <a href="/" class="brand-logo right">ShareTech</a>
+            </div>
+        </nav>
+    </header>
+    <div>
+        <div>
+            <div>
+                <div id="chat-messages" v-html="chatContent">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-if="joined">
+        <div>
+            <input type="text" v-model="newMsg" @keyup.enter="send" id="message-content">
+        </div>
+        <div>
+            <button id="send-button">
+                Send
+            </button>
+        </div>
+    </div>
+    <div id="chat-content"></div>
+    <footer class="page-footer">
+    </footer>
+    <script>
+        
+    </script>
+</html>

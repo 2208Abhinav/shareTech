@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ShareTech</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <label for="tech">Username</label>
+    <input name="tech" id="tech" />
+    <br>
+    <button id="set_tech">Set Tech</button>
+</body>
+<script>
+    function setTech() {
+        $.ajax({
+            type: 'GET',
+            url: 'http://192.168.43.199:8080/api/setTech',
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (message) {
+                console.log(message.responseText);
+            }
+        })
+    }
+
+    $('#set_tech').on('click', setTech);
+</script>
+
+</html>

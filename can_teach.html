@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ShareTech</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <label for="can-teach">I can teach</label>
+    <input name="can-teach" id="can-teach" />
+    <br>
+    <button id="sign_up">Sign In</button>
+</body>
+<script>
+    function signUp() {
+        $.ajax({
+            type: 'POST',
+            url: 'http://192.168.43.199:8080/api/can-teach',
+            data: JSON.stringify({
+                "canTeach": $('#can-teach').val(),
+            }),
+            xhrFields: { withCredentials: true },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (message) {
+                console.log(message.responseJSON);
+            }
+        });
+        console.log(document.cookie);
+    }
+
+    $('#sign_up').on('click', signUp);
+</script>
+
+</html>

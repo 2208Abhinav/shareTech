@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ShareTech</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <label for="username">Username</label>
+    <input name="username" id="username" />
+    <br>
+    <label for="username">Full Name</label>
+    <input name="full_name" id="fullName" />
+    <br>
+    <label for="password">Password</label>
+    <input name="password" id="password" />
+    <button id="sign_up">Sign Up</button>
+</body>
+<script>
+    function signUp() {
+        $.ajax({
+            type: 'POST',
+            url: 'http://192.168.43.199:8080/api/signup',
+            data: JSON.stringify({
+                "username": $('#username').val(),
+                "fullName": $('#fullName').val(),
+                "password": $('#password').val()
+            }),
+            xhrFields: { withCredentials: true },
+            contentType: "application/json",
+            dataType: "json",
+            success: function(data) {
+                console.log(data);
+                localStorage.setItem("userId", data.userId);
+            },
+            error: function(message) {
+                console.log(message.responseJSON);
+            }
+        })
+    }
+
+    $('#sign_up').on('click', signUp);
+</script>
+
+</html>

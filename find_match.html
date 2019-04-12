@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ShareTech</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <label for="i-can-teach">I can teach</label>
+    <input name="i-can-teach" id="i-can-teach" />
+    <br>
+    <label for="want-to-learn">Want to learn</label>
+    <input name="want-to-learn" id="want-to-learn" />
+    <br>
+    <button id="sign_up">Find!</button>
+    <div id="matches"></div>
+</body>
+<script>
+    function signUp() {
+        $.ajax({
+            type: 'GET',
+            url: 'http://192.168.43.199:8080/api/find-match',
+            data: JSON.stringify({
+                "ICanTeach": $('#i-can-teach').val(),
+                "IWantToLearn": $('#want-to-learn').val(),
+            }),
+            xhrFields: { withCredentials: true },
+            contentType: "application/json",
+            dataType: "json",
+            success: function(data) {
+                nMatches = data.length;
+                i = 0;
+                while (i < nMatches) {
+                    username = data[i].Username;
+                    userId = String(data[i].UserId);
+                    listOfMtaches = $("#matches");
+                    localStorage.setItem("receiverId", userId);
+                    console.log(localStorage.getItem("receiverId"));
+                    linkStr = '<h4>' + username + '</h4>' + '<a href="http://192.168.43.199:5000/chat"' + userId + '>Start Chat</a>';
+                    listOfMtaches.html(linkStr);
+                    i++;
+                }
+                match_data = data;
+                console.log(match_data);
+            },
+            error: function(message) {
+                console.log(message.responseJSON);
+            }
+        })
+    }
+
+    $('#sign_up').on('click', signUp);
+</script>
+
+</html>
